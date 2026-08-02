@@ -23,15 +23,10 @@ class AuthController extends Controller
             ], 401);
         }
 
-        if ($usuario->Estado_Registro === 'Pendiente' || $usuario->Estado_Registro === 'Bloqueado') {
+        if ($usuario->estado === 'Bloqueado') {
+            \Illuminate\Support\Facades\Log::warning("Intento de acceso denegado a usuario bloqueado: {$usuario->Correo}");
             return response()->json([
-                'message' => 'Acceso denegado: Cuenta en revisión o bloqueada'
-            ], 403);
-        }
-
-        if ($usuario->Activo == false) {
-            return response()->json([
-                'message' => 'Acceso denegado: Cuenta en revisión o bloqueada'
+                'error' => 'Acceso restringido. Su cuenta ha sido suspendida'
             ], 403);
         }
 

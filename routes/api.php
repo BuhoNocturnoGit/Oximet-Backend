@@ -10,7 +10,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-    Route::get('/admin/usuarios/pendientes', [\App\Http\Controllers\AdminController::class, 'listarPendientes']);
-    Route::put('/admin/usuarios/{id}/aprobar', [\App\Http\Controllers\AdminController::class, 'aprobarUsuario']);
+Route::middleware(['auth:sanctum', 'check.admin'])->group(function () {
+    Route::post('/usuarios', [\App\Http\Controllers\UsuarioController::class, 'store']);
+    Route::put('/usuarios/{id}', [\App\Http\Controllers\UsuarioController::class, 'update']);
+    Route::patch('/usuarios/{id}/estado', [\App\Http\Controllers\UsuarioController::class, 'cambiarEstado']);
 });
