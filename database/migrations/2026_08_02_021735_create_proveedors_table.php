@@ -6,22 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('proveedors', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('proveedor', function (Blueprint $table) {
+            $table->string('id_proveedor', 11)->primary();
+            $table->string('nombre', 100);
+            $table->string('direccion', 200);
+            $table->string('contacto_telefonico', 15);
+            $table->string('contacto_email', 100)->nullable();
+            $table->string('contacto_nombre', 100)->nullable();
+            $table->string('tipo_contrato', 50)->nullable();
+            $table->boolean('activo')->default(true);
+            $table->dateTime('fecha_registro');
+            $table->string('imagen_ruta', 255)->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('proveedors');
+        Schema::dropIfExists('proveedor');
     }
 };
