@@ -12,30 +12,48 @@ class Personal extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'personal';
-    protected $primaryKey = 'id_personal';
+    protected $primaryKey = 'ID_Personal';
+    public $timestamps = false;
 
     protected $fillable = [
-        'nombre',
-        'apellidos',
-        'correo',
-        'contrasena',
-        'telefono',
-        'estado_registro',
-        'activo',
+        'Nombre',
+        'Apellidos',
+        'Correo',
+        'Contrasena',
+        'Estado_Registro',
+        'Rol_Solicitado',
+        'Rol_Asignado',
+        'Rol',
+        'Telefono',
+        'Firma_Digital',
+        'Activo',
+        'Bloqueado',
+        'Fecha_Ultimo_Acceso',
+        'ID_Admin_Aprobador',
+        'Fecha_Aprobacion',
+        'Comentarios_Aprobacion',
+        'ID_Usuario_Creacion',
+        'ID_Usuario_Modificacion',
     ];
 
     protected $hidden = [
-        'contrasena',
+        'Contrasena',
         'remember_token',
     ];
 
     protected $casts = [
-        'activo' => 'boolean',
-        'contrasena' => 'hashed',
+        'Activo' => 'boolean',
+        'Bloqueado' => 'boolean',
+        'Contrasena' => 'hashed',
+        'Fecha_Ultimo_Acceso' => 'datetime',
+        'Fecha_Solicitud' => 'datetime',
+        'Fecha_Aprobacion' => 'datetime',
+        'Fecha_Creacion' => 'datetime',
+        'Fecha_Modificacion' => 'datetime',
     ];
 
     public function getAuthPassword()
     {
-        return $this->contrasena;
+        return $this->Contrasena;
     }
 }

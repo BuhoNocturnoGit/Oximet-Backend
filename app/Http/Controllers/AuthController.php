@@ -11,27 +11,27 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'correo' => 'required',
-            'contrasena' => 'required',
+            'Correo' => 'required',
+            'Contrasena' => 'required',
         ]);
 
-        $usuario = Personal::where('correo', $request->correo)->first();
+        $usuario = Personal::where('Correo', $request->Correo)->first();
 
-        if (!$usuario || !Hash::check($request->contrasena, $usuario->contrasena)) {
+        if (!$usuario || !Hash::check($request->Contrasena, $usuario->Contrasena)) {
             return response()->json([
                 'message' => 'Credenciales incorrectas'
             ], 401);
         }
 
-        if ($usuario->estado_registro === 'Pendiente' || $usuario->estado_registro === 'Bloqueado') {
+        if ($usuario->Estado_Registro === 'Pendiente' || $usuario->Estado_Registro === 'Bloqueado') {
             return response()->json([
                 'message' => 'Acceso denegado: Cuenta en revisión o bloqueada'
             ], 403);
         }
 
-        if ($usuario->activo == false) {
+        if ($usuario->Activo == false) {
             return response()->json([
-                'message' => 'Acceso denegado: Cuenta inactiva'
+                'message' => 'Acceso denegado: Cuenta en revisión o bloqueada'
             ], 403);
         }
 
