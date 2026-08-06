@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use App\Models\Personal;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class PersonalSeeder extends Seeder
 {
     public function run(): void
     {
-        //Administrador 
+        // Administrador
         Personal::create([
             'Nombre' => 'Carlos',
             'Apellidos' => 'Admin',
@@ -47,8 +47,8 @@ class PersonalSeeder extends Seeder
             'Fecha_Creacion' => Carbon::now(),
             'Fecha_Modificacion' => Carbon::now(),
         ]);
-        
-        //Operador Pendiente
+
+        // Operador Pendiente
         Personal::create([
             'Nombre' => 'Luis',
             'Apellidos' => 'Gomez',

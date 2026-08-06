@@ -12,7 +12,9 @@ class Personal extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'personal';
+
     protected $primaryKey = 'ID_Personal';
+
     public $timestamps = false;
 
     protected $fillable = [

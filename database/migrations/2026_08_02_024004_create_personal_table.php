@@ -30,7 +30,7 @@ return new class extends Migration
             $table->dateTime('Fecha_Aprobacion')->nullable();
             $table->text('Comentarios_Aprobacion')->nullable();
             $table->unsignedInteger('ID_Usuario_Creacion')->nullable();
-            
+
             $table->dateTime('Fecha_Creacion')->useCurrent();
             $table->unsignedInteger('ID_Usuario_Modificacion')->nullable();
             $table->dateTime('Fecha_Modificacion')->useCurrent()->useCurrentOnUpdate();

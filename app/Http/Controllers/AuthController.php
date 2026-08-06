@@ -17,21 +17,21 @@ class AuthController extends Controller
 
         $usuario = Personal::where('Correo', $request->Correo)->first();
 
-        if (!$usuario || !Hash::check($request->Contrasena, $usuario->Contrasena)) {
+        if (! $usuario || ! Hash::check($request->Contrasena, $usuario->Contrasena)) {
             return response()->json([
-                'message' => 'Credenciales incorrectas'
+                'message' => 'Credenciales incorrectas',
             ], 401);
         }
 
         if ($usuario->Estado_Registro === 'Pendiente' || $usuario->Estado_Registro === 'Bloqueado') {
             return response()->json([
-                'message' => 'Acceso denegado: Cuenta en revisión o bloqueada'
+                'message' => 'Acceso denegado: Cuenta en revisión o bloqueada',
             ], 403);
         }
 
         if ($usuario->Activo == false) {
             return response()->json([
-                'message' => 'Acceso denegado: Cuenta en revisión o bloqueada'
+                'message' => 'Acceso denegado: Cuenta en revisión o bloqueada',
             ], 403);
         }
 
@@ -49,7 +49,7 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Sesión cerrada correctamente'
+            'message' => 'Sesión cerrada correctamente',
         ], 200);
     }
 }

@@ -10,9 +10,9 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user() || $request->user()->Rol !== 'Admin') {
+        if (! $request->user() || $request->user()->Rol !== 'Admin') {
             return response()->json([
-                'mensaje' => 'Acceso denegado: Privilegios insuficientes'
+                'mensaje' => 'Acceso denegado: Privilegios insuficientes',
             ], 403);
         }
 

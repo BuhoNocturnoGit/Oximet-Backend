@@ -12,7 +12,7 @@ class AdminController extends Controller
         $pendientes = Personal::where('Estado_Registro', 'Pendiente')
             ->whereNull('Rol')
             ->get();
-            
+
         return response()->json($pendientes, 200);
     }
 
@@ -20,12 +20,12 @@ class AdminController extends Controller
     {
         $request->validate([
             'rol' => 'required|in:Admin,Supervisor,Operador',
-            'comentarios_aprobacion' => 'nullable|string'
+            'comentarios_aprobacion' => 'nullable|string',
         ]);
 
         $usuario = Personal::find($id);
 
-        if (!$usuario) {
+        if (! $usuario) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
 
@@ -42,7 +42,7 @@ class AdminController extends Controller
 
         return response()->json([
             'message' => 'Usuario aprobado exitosamente',
-            'usuario' => $usuario
+            'usuario' => $usuario,
         ], 200);
     }
 }
