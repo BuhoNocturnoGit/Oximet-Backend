@@ -3,10 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\Balon;
+use App\Models\EstadoBalon;
 use App\Models\HistorialUbicacionBalon;
 use App\Models\InformePresionPisoDiario;
 use App\Models\Personal;
+use App\Models\TipoBalon;
 use App\Models\Ubicacion;
+use Database\Seeders\EstadoBalonSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -17,11 +20,23 @@ class DistribucionInformeTest extends TestCase
 
     private Personal $usuario;
 
+    private TipoBalon $tipo;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->usuario = Personal::factory()->administrador()->create();
+        $this->tipo = TipoBalon::create([
+            'capacidad_o2_m3' => '10',
+            'material' => 'Aluminio',
+            'modelo_valvula' => 'V-01',
+            'color' => 'Verde',
+            'norma' => 'ISO 9809',
+            'capacidad_real_m3' => 10.00,
+            'volumen_de_tanque' => 47.00,
+        ]);
+        $this->seed(EstadoBalonSeeder::class);
         Sanctum::actingAs($this->usuario);
     }
 
@@ -29,14 +44,16 @@ class DistribucionInformeTest extends TestCase
     {
         return Balon::create([
             'serie_balon' => $serie,
+            'id_tipo' => $this->tipo->id_tipo,
+            'origen' => 'HRC',
             'capacidad_m3' => $capacidad,
+            'fecha_fabricacion' => '2023-05-01',
+            'fecha_vencimiento' => '2033-05-01',
             'presion_actual_psi' => 2000,
             'cargas_utilizadas' => 0,
             'max_cargas' => 3,
-            'id_estado' => $estado,
+            'id_estado' => EstadoBalon::idDe($estado),
             'id_ubicacion_actual' => $ubicacion,
-            'fecha_creacion' => now(),
-            'id_usuario_creacion' => $this->usuario->ID_Personal,
         ]);
     }
 
@@ -121,13 +138,13 @@ class DistribucionInformeTest extends TestCase
 
         $this->assertDatabaseHas('balones', [
             'serie_balon' => 'B-001',
-            'id_estado' => 'En uso',
+            'id_estado' => EstadoBalon::idDe('En uso'),
             'id_ubicacion_actual' => $uci->id_ubicacion,
         ]);
 
         $this->assertDatabaseHas('balones', [
             'serie_balon' => 'B-002',
-            'id_estado' => 'Vacio',
+            'id_estado' => EstadoBalon::idDe('Vacio'),
             'id_ubicacion_actual' => null,
         ]);
 

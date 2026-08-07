@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AtencionSisDiario;
 use App\Models\Balon;
+use App\Models\EstadoBalon;
 use App\Models\Paciente;
 use App\Models\ReporteSisDiario;
 use Illuminate\Http\Request;
@@ -138,9 +139,9 @@ class AtencionSisController extends Controller
 
                 $balon->cargas_utilizadas = $balon->cargas_utilizadas + 1;
                 $balon->presion_actual_psi = $request->psi_real;
-                $balon->id_estado = 'En uso';
-                $balon->id_usuario_modificacion = $usuario->ID_Personal;
-                $balon->fecha_modificacion = now();
+                $balon->id_estado = EstadoBalon::idDe('En uso');
+                $balon->id_usuario_ultima_modificacion = $usuario->ID_Personal;
+                $balon->fecha_ultima_modificacion = now();
                 $balon->save();
 
                 $reporte->increment('total_atenciones', 1);
@@ -185,16 +186,16 @@ class AtencionSisController extends Controller
                 $atencion->save();
 
                 if ($balon->cargas_utilizadas >= $balon->max_cargas) {
-                    $balon->id_estado = 'Mantenimiento';
+                    $balon->id_estado = EstadoBalon::idDe('En mantenimiento');
                     $balon->cargas_utilizadas = 0;
                     $balon->presion_actual_psi = 0;
                 } else {
-                    $balon->id_estado = 'Vacio';
+                    $balon->id_estado = EstadoBalon::idDe('Vacio');
                     $balon->presion_actual_psi = 0;
                 }
 
-                $balon->id_usuario_modificacion = $request->user()->ID_Personal;
-                $balon->fecha_modificacion = now();
+                $balon->id_usuario_ultima_modificacion = $request->user()->ID_Personal;
+                $balon->fecha_ultima_modificacion = now();
                 $balon->save();
             });
         } catch (\Throwable $e) {

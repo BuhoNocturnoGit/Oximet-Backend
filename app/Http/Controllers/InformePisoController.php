@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Balon;
 use App\Models\DetalleConsumoPiso;
+use App\Models\EstadoBalon;
 use App\Models\HistorialUbicacionBalon;
 use App\Models\InformePresionPisoDiario;
 use App\Models\UbicacionActual;
@@ -94,10 +95,10 @@ class InformePisoController extends Controller
             $detalle = DB::transaction(function () use ($request, $informe, $balonLleno, $balonVacio, $volumenM3, $origenLleno, $origenVacio) {
                 $usuario = $request->user();
 
-                $balonLleno->id_estado = 'En uso';
+                $balonLleno->id_estado = EstadoBalon::idDe('En uso');
                 $balonLleno->id_ubicacion_actual = $request->id_ubicacion_servicio;
-                $balonLleno->id_usuario_modificacion = $usuario->ID_Personal;
-                $balonLleno->fecha_modificacion = now();
+                $balonLleno->id_usuario_ultima_modificacion = $usuario->ID_Personal;
+                $balonLleno->fecha_ultima_modificacion = now();
                 $balonLleno->save();
 
                 UbicacionActual::updateOrCreate(
@@ -123,10 +124,10 @@ class InformePisoController extends Controller
                 if ($balonVacio) {
                     $recibido = true;
 
-                    $balonVacio->id_estado = 'Vacio';
+                    $balonVacio->id_estado = EstadoBalon::idDe('Vacio');
                     $balonVacio->id_ubicacion_actual = null;
-                    $balonVacio->id_usuario_modificacion = $usuario->ID_Personal;
-                    $balonVacio->fecha_modificacion = now();
+                    $balonVacio->id_usuario_ultima_modificacion = $usuario->ID_Personal;
+                    $balonVacio->fecha_ultima_modificacion = now();
                     $balonVacio->save();
 
                     UbicacionActual::where('serie_balon', $balonVacio->serie_balon)->delete();

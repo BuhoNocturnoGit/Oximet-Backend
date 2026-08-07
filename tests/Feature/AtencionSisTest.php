@@ -4,9 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\AtencionSisDiario;
 use App\Models\Balon;
+use App\Models\EstadoBalon;
 use App\Models\Paciente;
 use App\Models\Personal;
 use App\Models\ReporteSisDiario;
+use App\Models\TipoBalon;
+use Database\Seeders\EstadoBalonSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -17,11 +20,23 @@ class AtencionSisTest extends TestCase
 
     private Personal $usuario;
 
+    private TipoBalon $tipo;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->usuario = Personal::factory()->administrador()->create();
+        $this->tipo = TipoBalon::create([
+            'capacidad_o2_m3' => '10',
+            'material' => 'Aluminio',
+            'modelo_valvula' => 'V-01',
+            'color' => 'Verde',
+            'norma' => 'ISO 9809',
+            'capacidad_real_m3' => 10.00,
+            'volumen_de_tanque' => 47.00,
+        ]);
+        $this->seed(EstadoBalonSeeder::class);
         Sanctum::actingAs($this->usuario);
     }
 
@@ -29,13 +44,15 @@ class AtencionSisTest extends TestCase
     {
         return Balon::create([
             'serie_balon' => $serie,
+            'id_tipo' => $this->tipo->id_tipo,
+            'origen' => 'HRC',
             'capacidad_m3' => $capacidad,
+            'fecha_fabricacion' => '2023-05-01',
+            'fecha_vencimiento' => '2033-05-01',
             'presion_actual_psi' => $psi,
             'cargas_utilizadas' => $cargas,
             'max_cargas' => $max,
-            'id_estado' => $estado,
-            'fecha_creacion' => now(),
-            'id_usuario_creacion' => $this->usuario->ID_Personal,
+            'id_estado' => EstadoBalon::idDe($estado),
         ]);
     }
 
@@ -141,7 +158,7 @@ class AtencionSisTest extends TestCase
             'serie_balon' => 'B-OVR',
             'cargas_utilizadas' => 1,
             'presion_actual_psi' => 1800,
-            'id_estado' => 'En uso',
+            'id_estado' => EstadoBalon::idDe('En uso'),
         ]);
 
         $this->assertDatabaseHas('reporte_sis_diario', [
@@ -183,7 +200,7 @@ class AtencionSisTest extends TestCase
 
         $this->assertDatabaseHas('balones', [
             'serie_balon' => 'B-MANT',
-            'id_estado' => 'Mantenimiento',
+            'id_estado' => EstadoBalon::idDe('En mantenimiento'),
             'cargas_utilizadas' => 0,
             'presion_actual_psi' => 0,
         ]);
@@ -211,7 +228,7 @@ class AtencionSisTest extends TestCase
 
         $this->assertDatabaseHas('balones', [
             'serie_balon' => 'B-VAC',
-            'id_estado' => 'Vacio',
+            'id_estado' => EstadoBalon::idDe('Vacio'),
             'cargas_utilizadas' => 1,
             'presion_actual_psi' => 0,
         ]);
