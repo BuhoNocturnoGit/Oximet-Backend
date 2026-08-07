@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InformePisoController;
 use App\Http\Controllers\RenoxiController;
+use App\Http\Controllers\TipoBalonController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::get('/admin/usuarios/pendientes', [AdminController::class, 'listarPendientes']);
     Route::put('/admin/usuarios/{id}/aprobar', [AdminController::class, 'aprobarUsuario']);
+    Route::post('/admin/tipos-balon', [TipoBalonController::class, 'store']);
 });
 
 Route::middleware(['auth:sanctum', 'check.admin'])->group(function () {
