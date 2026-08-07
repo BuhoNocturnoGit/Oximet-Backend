@@ -22,14 +22,10 @@ class Personal extends Authenticatable
         'Apellidos',
         'Correo',
         'Contrasena',
-        'Estado_Registro',
-        'Rol_Solicitado',
-        'Rol_Asignado',
-        'Rol',
+        'id_rol',
+        'estado',
         'Telefono',
         'Firma_Digital',
-        'Activo',
-        'Bloqueado',
         'Fecha_Ultimo_Acceso',
         'ID_Admin_Aprobador',
         'Fecha_Aprobacion',
@@ -44,8 +40,6 @@ class Personal extends Authenticatable
     ];
 
     protected $casts = [
-        'Activo' => 'boolean',
-        'Bloqueado' => 'boolean',
         'Contrasena' => 'hashed',
         'Fecha_Ultimo_Acceso' => 'datetime',
         'Fecha_Solicitud' => 'datetime',
@@ -57,5 +51,10 @@ class Personal extends Authenticatable
     public function getAuthPassword()
     {
         return $this->Contrasena;
+    }
+
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class, 'id_rol', 'id');
     }
 }

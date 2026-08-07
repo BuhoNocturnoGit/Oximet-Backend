@@ -17,51 +17,36 @@ class PersonalSeeder extends Seeder
             'Apellidos' => 'Admin',
             'Correo' => 'admin@oximet.com',
             'Contrasena' => Hash::make('password123'),
-            'Estado_Registro' => 'Activo',
-            'Rol_Solicitado' => 'Admin',
-            'Rol_Asignado' => 'Admin',
-            'Rol' => 'Admin',
+            'id_rol' => 1,
+            'estado' => 'Activo',
             'Telefono' => '1234567890',
-            'Activo' => 1,
-            'Bloqueado' => 0,
-            'Fecha_Solicitud' => Carbon::now(),
             'Fecha_Aprobacion' => Carbon::now(),
             'Fecha_Creacion' => Carbon::now(),
             'Fecha_Modificacion' => Carbon::now(),
         ]);
 
-        // Operador Pendiente
+        // Supervisor
         Personal::create([
             'Nombre' => 'Maria',
-            'Apellidos' => 'Pendiente',
+            'Apellidos' => 'Supervisor',
             'Correo' => 'maria@oximet.com',
             'Contrasena' => Hash::make('password123'),
-            'Estado_Registro' => 'Pendiente',
-            'Rol_Solicitado' => 'Operador',
-            'Rol_Asignado' => null,
-            'Rol' => null, // Obligatorio NULL para el panel de pendientes
+            'id_rol' => 2,
+            'estado' => 'Activo',
             'Telefono' => '0987654321',
-            'Activo' => 0,
-            'Bloqueado' => 0,
-            'Fecha_Solicitud' => Carbon::now(),
             'Fecha_Creacion' => Carbon::now(),
             'Fecha_Modificacion' => Carbon::now(),
         ]);
 
-        // Operador Pendiente
+        // Operario
         Personal::create([
             'Nombre' => 'Luis',
             'Apellidos' => 'Gomez',
             'Correo' => 'luis@oximet.com',
             'Contrasena' => Hash::make('password123'),
-            'Estado_Registro' => 'Pendiente',
-            'Rol_Solicitado' => 'Supervisor',
-            'Rol_Asignado' => null,
-            'Rol' => null,
+            'id_rol' => 3,
+            'estado' => 'Activo',
             'Telefono' => '1122334455',
-            'Activo' => 0,
-            'Bloqueado' => 0,
-            'Fecha_Solicitud' => Carbon::now(),
             'Fecha_Creacion' => Carbon::now(),
             'Fecha_Modificacion' => Carbon::now(),
         ]);

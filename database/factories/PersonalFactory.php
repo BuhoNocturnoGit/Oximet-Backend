@@ -30,44 +30,25 @@ class PersonalFactory extends Factory
             'Apellidos' => fake()->lastName(),
             'Correo' => fake()->unique()->safeEmail(),
             'Contrasena' => static::$password ??= Hash::make('password123'),
-            'Estado_Registro' => 'Activo',
-            'Rol_Solicitado' => 'Operador',
-            'Rol_Asignado' => 'Operador',
-            'Rol' => 'Operador',
+            'id_rol' => 3,
+            'estado' => 'Activo',
             'Telefono' => fake()->numerify('##########'),
-            'Activo' => 1,
-            'Bloqueado' => 0,
         ];
     }
 
     public function administrador(): static
     {
         return $this->state(fn (array $attributes) => [
-            'Estado_Registro' => 'Activo',
-            'Rol_Solicitado' => 'Admin',
-            'Rol_Asignado' => 'Admin',
-            'Rol' => 'Admin',
-            'Activo' => 1,
+            'id_rol' => 1,
+            'estado' => 'Activo',
         ]);
     }
 
     public function supervisor(): static
     {
         return $this->state(fn (array $attributes) => [
-            'Estado_Registro' => 'Activo',
-            'Rol_Solicitado' => 'Supervisor',
-            'Rol_Asignado' => 'Supervisor',
-            'Rol' => 'Supervisor',
-            'Activo' => 1,
-        ]);
-    }
-
-    public function pendiente(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'Estado_Registro' => 'Pendiente',
-            'Rol' => null,
-            'Activo' => 0,
+            'id_rol' => 2,
+            'estado' => 'Activo',
         ]);
     }
 }

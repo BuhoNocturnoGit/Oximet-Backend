@@ -9,9 +9,7 @@ class AdminController extends Controller
 {
     public function listarPendientes()
     {
-        $pendientes = Personal::where('Estado_Registro', 'Pendiente')
-            ->whereNull('Rol')
-            ->get();
+        $pendientes = Personal::where('estado', 'Bloqueado')->get();
 
         return response()->json($pendientes, 200);
     }
@@ -19,7 +17,7 @@ class AdminController extends Controller
     public function aprobarUsuario(Request $request, $id)
     {
         $request->validate([
-            'rol' => 'required|in:Admin,Supervisor,Operador',
+            'rol' => 'required|integer|in:1,2,3',
             'comentarios_aprobacion' => 'nullable|string',
         ]);
 
@@ -29,10 +27,8 @@ class AdminController extends Controller
             return response()->json(['message' => 'Usuario no encontrado'], 404);
         }
 
-        $usuario->Estado_Registro = 'Activo';
-        $usuario->Activo = 1;
-        $usuario->Rol_Asignado = $request->rol;
-        $usuario->Rol = $request->rol;
+        $usuario->estado = 'Activo';
+        $usuario->id_rol = $request->rol;
         $usuario->ID_Admin_Aprobador = $request->user()->ID_Personal;
         $usuario->Fecha_Aprobacion = now();
         $usuario->Comentarios_Aprobacion = $request->comentarios_aprobacion;

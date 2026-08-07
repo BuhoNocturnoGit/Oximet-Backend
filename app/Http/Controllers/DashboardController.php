@@ -15,7 +15,7 @@ class DashboardController extends Controller
 
     private const PERIODOS = ['Dia', 'Semana', 'Mes', 'Anio'];
 
-    private const ROLES_LARGOS = ['Admin', 'Supervisor'];
+    private const ROLES_LARGOS = [1, 2];
 
     public function obtenerConsolidado(Request $request)
     {
@@ -31,7 +31,7 @@ class DashboardController extends Controller
             return response()->json(['message' => 'El período de análisis no es válido'], 422);
         }
 
-        if (in_array($periodo, ['Semana', 'Mes', 'Anio'], true) && ! in_array($request->user()->Rol, self::ROLES_LARGOS, true)) {
+        if (in_array($periodo, ['Semana', 'Mes', 'Anio'], true) && ! in_array($request->user()->id_rol, self::ROLES_LARGOS, true)) {
             return response()->json(['message' => 'No tiene permisos para consultar este período'], 403);
         }
 
