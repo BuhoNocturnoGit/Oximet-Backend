@@ -13,12 +13,54 @@ class Ubicacion extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'id_tipo_ubicacion',
+        'id_servicio_hospital',
+        'id_ubicacion_padre',
+        'codigo',
         'nombre',
-        'piso',
+        'descripcion',
+        'capacidad_maxima_balones',
+        'capacidad_maxima_m3',
         'estado',
+        'edificio',
+        'piso',
+        'sector',
+        'sala',
+        'nro_cama',
+        'referencia',
+        'config_json',
         'fecha_creacion',
         'id_usuario_creacion',
+        'fecha_modificacion',
+        'id_usuario_modificacion',
     ];
+
+    protected $casts = [
+        'config_json' => 'array',
+        'capacidad_maxima_m3' => 'decimal:2',
+        'fecha_creacion' => 'datetime',
+        'fecha_modificacion' => 'datetime',
+    ];
+
+    public function tipo()
+    {
+        return $this->belongsTo(TipoUbicacion::class, 'id_tipo_ubicacion');
+    }
+
+    public function servicio()
+    {
+        return $this->belongsTo(ServicioHospital::class, 'id_servicio_hospital');
+    }
+
+    public function padre()
+    {
+        return $this->belongsTo(Ubicacion::class, 'id_ubicacion_padre');
+    }
+
+    public function hijos()
+    {
+        return $this->hasMany(Ubicacion::class, 'id_ubicacion_padre');
+    }
 
     public function balones()
     {

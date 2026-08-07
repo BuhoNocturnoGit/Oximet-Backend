@@ -6,6 +6,7 @@ use App\Models\Balon;
 use App\Models\HistorialUbicacionBalon;
 use App\Models\InformePresionPisoDiario;
 use App\Models\Personal;
+use App\Models\TipoUbicacion;
 use App\Models\Ubicacion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -17,12 +18,44 @@ class DistribucionInformeTest extends TestCase
 
     private Personal $usuario;
 
+    private TipoUbicacion $tipo;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->usuario = Personal::factory()->administrador()->create();
+        $this->tipo = TipoUbicacion::create([
+            'nombre_tipo' => 'Servicio Hospital',
+            'orden' => 1,
+            'permite_balones' => true,
+            'permite_movimientos' => true,
+            'es_almacen' => false,
+            'es_produccion' => false,
+            'es_consumo' => false,
+            'es_mantenimiento' => false,
+            'es_descartado' => false,
+            'es_transito' => false,
+            'es_servicio_hospital' => true,
+            'requiere_autorizacion' => false,
+            'activo' => true,
+            'fecha_creacion' => now(),
+            'id_usuario_creacion' => $this->usuario->ID_Personal,
+        ]);
         Sanctum::actingAs($this->usuario);
+    }
+
+    private function crearUbicacion(string $codigo, string $nombre, string $piso): Ubicacion
+    {
+        return Ubicacion::create([
+            'id_tipo_ubicacion' => $this->tipo->id_tipo_ubicacion,
+            'codigo' => $codigo,
+            'nombre' => $nombre,
+            'piso' => $piso,
+            'estado' => 'Activo',
+            'fecha_creacion' => now(),
+            'id_usuario_creacion' => $this->usuario->ID_Personal,
+        ]);
     }
 
     private function crearBalon(string $serie, string $estado = 'Lleno', ?int $ubicacion = null, float $capacidad = 10): Balon
@@ -92,21 +125,9 @@ class DistribucionInformeTest extends TestCase
             'id_usuario_creacion' => $this->usuario->ID_Personal,
         ]);
 
-        $planta = Ubicacion::create([
-            'nombre' => 'Planta',
-            'piso' => 'P1',
-            'estado' => 'Activo',
-            'fecha_creacion' => now(),
-            'id_usuario_creacion' => $this->usuario->ID_Personal,
-        ]);
+        $planta = $this->crearUbicacion('PLANTA', 'Planta', 'P1');
 
-        $uci = Ubicacion::create([
-            'nombre' => 'UCI',
-            'piso' => 'P2',
-            'estado' => 'Activo',
-            'fecha_creacion' => now(),
-            'id_usuario_creacion' => $this->usuario->ID_Personal,
-        ]);
+        $uci = $this->crearUbicacion('UCI', 'UCI', 'P2');
 
         $balonLleno = $this->crearBalon('B-001', 'Lleno', $planta->id_ubicacion);
         $balonVacio = $this->crearBalon('B-002', 'Vacio', $uci->id_ubicacion);
@@ -166,13 +187,7 @@ class DistribucionInformeTest extends TestCase
             'id_usuario_creacion' => $this->usuario->ID_Personal,
         ]);
 
-        $uci = Ubicacion::create([
-            'nombre' => 'Emergencia',
-            'piso' => 'P1',
-            'estado' => 'Activo',
-            'fecha_creacion' => now(),
-            'id_usuario_creacion' => $this->usuario->ID_Personal,
-        ]);
+        $uci = $this->crearUbicacion('EMER', 'Emergencia', 'P1');
 
         $this->crearBalon('B-010', 'Lleno', null);
 
@@ -205,13 +220,7 @@ class DistribucionInformeTest extends TestCase
             'id_usuario_creacion' => $this->usuario->ID_Personal,
         ]);
 
-        $servicio = Ubicacion::create([
-            'nombre' => 'UCI',
-            'piso' => 'P2',
-            'estado' => 'Activo',
-            'fecha_creacion' => now(),
-            'id_usuario_creacion' => $this->usuario->ID_Personal,
-        ]);
+        $servicio = $this->crearUbicacion('UCI2', 'UCI', 'P2');
 
         $this->crearBalon('B-101', 'Lleno', null, 10);
         $this->crearBalon('B-102', 'Lleno', null, 10);
